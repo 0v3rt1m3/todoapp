@@ -1,0 +1,201 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<!-- <div>
+    <a routerLink="/login" routerLinkActive="active">Login </a>
+    <a routerLink="/register" routerLinkActive="active">Register</a>
+    <a routerLink="/task" routerLinkActive="active">task</a>
+
+</div> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Collapsible sidebar using Bootstrap 4</title>
+
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar Holder -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>ADD TASK</h3>
+            </div>
+
+            <!-- <ul class="list-unstyled components">
+                <p>Dummy Heading</p>
+
+
+                <a href="#">Contact</a>
+                </li>
+            </ul> -->
+
+            <ul class="list-unstyled CTAs" style="text-align: center">
+                <div class="form-group">
+                    <form>
+                        <li>
+                            <p>List your task! </p>
+                            <!-- {{task.taskName}} -->
+                        </li>
+                        <li>
+                            <input type="text" [(ngModel)]="task.taskName" [ngModelOptions]="{standalone: true}" placeholder="Input Task Name" class="form-control" required>
+                        </li>
+                        <hr>
+
+                        <li>
+                            <p>Status of your task!</p>
+                            <!-- {{task.status}} -->
+                        </li>
+                        <li>
+                            <select class="form-control" [(ngModel)]="task.status" [ngModelOptions]="{standalone: true}" required>
+                                <option>Not Yet Started</option>
+                                <option>On Going</option>
+                                <option>Completed</option>
+                                </select>
+                        </li>
+                        <hr>
+
+                        <li>
+                            <p>Due date of task!</p>
+                            <!-- {{task.dateDue}} -->
+                        </li>
+                        <li>
+                            <input type="date" class="form-control" [(ngModel)]="task.dateDue" [ngModelOptions]="{standalone: true}" placeholder="Input Task Name" required min="2000-01-02" max="2099-12-31">
+                        </li>
+                        <hr>
+                        <!-- <li>
+                            <p></p>
+                        </li> -->
+                        <li>
+                            <button type="submit" (click)="onClick($event)" class="btn-primary">Add Task</button>
+                        </li>
+                    </form>
+                </div>
+            </ul>
+        </nav>
+
+        <!-- Page Content Holder -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <button type="button" class="navbar-btn" id="sidebarCollapse"><i class="fa fa-plus" style="font-size: 40px"></i></button>
+                    <h1 class="mx-auto">To do list:</h1>
+                </div>
+            </nav>
+            <div class="container">
+
+                <div class="card-columns">
+                    <!--  -->
+                    <div class="card border-success mb-3" *ngFor="let i of filterItemsOfCompleted(tasks); let j = index" [attr.data-index]="j">
+                        <div *ngIf="!i.editable; else condition1">
+                            <div class="card-header" style="background:#77D121; color: #ffffff; font-size: 20px;">{{i.taskName}} <button class="navbar-btn float-right" (click)="removeTask($event,i)" style="background: #77D121;"><i class="fas fa-times" style="color:red"></i></button> </div>
+                            <div class="card-body text-success">
+                                <h5 class="card-title" style="text-align: center">{{i.status}}</h5>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Due on {{i.dateDue | date:"MM/dd/yyyy"}} <button class="btn-success float-right" (click)="changeEditableFlag($event,i)">Edit</button> </small>
+                            </div>
+                        </div>
+                        <ng-template #condition1>
+                            <input type="text" [(ngModel)]="i.taskName" [ngModelOptions]="{standalone: true}" placeholder="Input Task Name" class="form-control" required>
+                            <div class="card-body text-success">
+                                <!-- <h5 class="card-title"> -->
+                                <span class="card-text">Change status:</span>
+                                <!-- </h5> -->
+                                <select class="form-control" [(ngModel)]="i.status" [ngModelOptions]="{standalone: true}" required>
+                                        <option>Not Yet Started</option>
+                                        <option>On Going</option>
+                                        <option>Completed</option>
+                                        </select>
+                                <span class="card-text">Change date:</span>
+                                <input type="date" class="form-control" [(ngModel)]="i.dateDue" [ngModelOptions]="{standalone: true}" placeholder="Input Task Name" required>
+
+                            </div>
+                            <div class="card-footer text-center">
+                                <button (click)="changeEditableFlag($event,i)" class="btn-success">Save</button>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <!--  -->
+                </div>
+                <div class="card-columns">
+                    <!--  -->
+                    <div class="card border-warning mb-3" *ngFor="let i of filterItemsOfOnGoing(tasks); let j = index" [attr.data-index]="j">
+                        <div *ngIf="!i.editable; else condition1">
+                            <div class="card-header" style="background:#F7BA38; color: #ffffff; font-size: 20px;">{{i.taskName}} <button class="navbar-btn float-right" (click)="removeTask($event,i)" style="background: #F7BA38;"><i class="fas fa-times" style="color:red"></i></button> </div>
+                            <div class="card-body text-warning">
+                                <h5 class="card-title" style="text-align: center">{{i.status}}</h5>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Due on {{i.dateDue| date:"MM/dd/yyyy"}} <button class="btn-success float-right" (click)="changeEditableFlag($event,i)">Edit</button> </small>
+                            </div>
+                        </div>
+                        <ng-template #condition1>
+                            <input type="text" [(ngModel)]="i.taskName" [ngModelOptions]="{standalone: true}" placeholder="Input Task Name" class="form-control" required>
+                            <div class="card-body text-warning">
+                                <!-- <h5 class="card-title"> -->
+                                <span class="card-text">Change status:</span>
+                                <!-- </h5> -->
+                                <select class="form-control" [(ngModel)]="i.status" [ngModelOptions]="{standalone: true}" required>
+                                        <option>Not Yet Started</option>
+                                        <option>On Going</option>
+                                        <option>Completed</option>
+                                        </select>
+                                <span class="card-text">Change date:</span>
+                                <input type="date" class="form-control" [(ngModel)]="i.dateDue" [ngModelOptions]="{standalone: true}" placeholder="Input Task Name" required>
+
+                            </div>
+                            <div class="card-footer text-center">
+                                <button (click)="changeEditableFlag($event,i)" class="btn-success">Save</button>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <!--  -->
+                </div>
+                <div class="card-columns">
+                    <div class="card border-danger mb-3" *ngFor="let i of filterItemsOfNotStarted(tasks); let j = index" [attr.data-index]="j">
+                        <div *ngIf="!i.editable; else condition1">
+                            <div class="card-header" style="background:#C9232B; color: #ffffff; font-size: 20px;">{{i.taskName}} <button class="navbar-btn float-right" (click)="removeTask($event,i)" style="background: #C9232B;"><i class="fas fa-times" style="color:red"></i></button> </div>
+                            <div class="card-body text-danger">
+                                <h5 class="card-title" style="text-align: center">{{i.status}}</h5>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Due on {{i.dateDue| date:"MM/dd/yyyy"}} <button class="btn-success float-right" (click)="changeEditableFlag($event,i)">Edit</button> </small>
+                            </div>
+                        </div>
+                        <ng-template #condition1>
+                            <input type="text" [(ngModel)]="i.taskName" [ngModelOptions]="{standalone: true}" placeholder="Input Task Name" class="form-control" required>
+                            <div class="card-body text-danger">
+                                <!-- <h5 class="card-title"> -->
+                                <span class="card-text">Change status:</span>
+                                <!-- </h5> -->
+                                <select class="form-control" [(ngModel)]="i.status" [ngModelOptions]="{standalone: true}" required>
+                                        <option>Not Yet Started</option>
+                                        <option>On Going</option>
+                                        <option>Completed</option>
+                                        </select>
+                                <span class="card-text">Change date:</span>
+                                <input type="date" class="form-control" [(ngModel)]="i.dateDue" [ngModelOptions]="{standalone: true}" placeholder="Input Task Name" required>
+
+                            </div>
+                            <div class="card-footer text-center">
+                                <button (click)="changeEditableFlag($event,i)" class="btn-success">Save</button>
+                            </div>
+                        </ng-template>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
